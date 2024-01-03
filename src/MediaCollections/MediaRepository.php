@@ -19,9 +19,6 @@ class MediaRepository
 
     /**
      * Get all media in the collection.
-     *
-     * @param array|callable $filter
-     *
      */
     public function getCollection(
         HasMedia $model,
@@ -33,11 +30,6 @@ class MediaRepository
 
     /**
      * Apply given filters on media.
-     *
-     * @param Collection $media
-     * @param array|callable $filter
-     *
-     * @return Collection
      */
     protected function applyFilterToMediaCollection(
         Collection $media,
@@ -88,9 +80,31 @@ class MediaRepository
             ->get();
     }
 
+    public function getOrphans(): DbCollection
+    {
+        return $this->orphansQuery()
+            ->get();
+    }
+
+    public function getOrphansByCollectionName(string $collectionName): DbCollection
+    {
+        return $this->orphansQuery()
+            ->where('collection_name', $collectionName)
+            ->get();
+    }
+
     protected function query(): Builder
     {
         return $this->model->newQuery();
+    }
+
+    protected function orphansQuery(): Builder
+    {
+        return $this->query()
+            ->whereDoesntHave(
+                'model',
+                fn (Builder $q) => $q->hasMacro('withTrashed') ? $q->withTrashed() : $q,
+            );
     }
 
     protected function getDefaultFilterFunction(array $filters): Closure

@@ -59,11 +59,11 @@ use Spatie\MediaLibraryPro\Models\TemporaryUpload;
  * @property-read ?\Illuminate\Support\Carbon $created_at
  * @property-read ?\Illuminate\Support\Carbon $updated_at
  */
-class Media extends Model implements Responsable, Htmlable, Attachable
+class Media extends Model implements Attachable, Htmlable, Responsable
 {
-    use IsSorted;
     use CustomMediaProperties;
     use HasUuid;
+    use IsSorted;
 
     protected $table = 'media';
 
@@ -228,10 +228,7 @@ class Media extends Model implements Responsable, Htmlable, Attachable
     /**
      * Get the value of custom property with the given name.
      *
-     * @param string $propertyName
-     * @param mixed $default
-     *
-     * @return mixed
+     * @param  mixed  $default
      */
     public function getCustomProperty(string $propertyName, $default = null): mixed
     {
@@ -239,8 +236,7 @@ class Media extends Model implements Responsable, Htmlable, Attachable
     }
 
     /**
-     * @param mixed $value
-     *
+     * @param  mixed  $value
      * @return $this
      */
     public function setCustomProperty(string $name, $value): self
@@ -276,7 +272,6 @@ class Media extends Model implements Responsable, Htmlable, Attachable
     {
         return collect($this->generated_conversions ?? []);
     }
-
 
     public function markAsConversionGenerated(string $conversionName): self
     {
@@ -327,7 +322,7 @@ class Media extends Model implements Responsable, Htmlable, Attachable
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Content-Type' => $this->mime_type,
             'Content-Length' => $this->size,
-            'Content-Disposition' => $contentDispositionType . '; filename="' . $this->file_name . '"',
+            'Content-Disposition' => $contentDispositionType.'; filename="'.$this->file_name.'"',
             'Pragma' => 'public',
         ];
 
@@ -369,7 +364,7 @@ class Media extends Model implements Responsable, Htmlable, Attachable
         return Attribute::get(fn () => $this->getUrl());
     }
 
-    /** @param string $collectionName */
+    /** @param  string  $collectionName */
     public function move(HasMedia $model, $collectionName = 'default', string $diskName = '', string $fileName = ''): self
     {
         $newMedia = $this->copy($model, $collectionName, $diskName, $fileName);
@@ -379,12 +374,12 @@ class Media extends Model implements Responsable, Htmlable, Attachable
         return $newMedia;
     }
 
-    /** @param string $collectionName */
+    /** @param  string  $collectionName */
     public function copy(HasMedia $model, $collectionName = 'default', string $diskName = '', string $fileName = ''): self
     {
         $temporaryDirectory = TemporaryDirectory::create();
 
-        $temporaryFile = $temporaryDirectory->path('/') . DIRECTORY_SEPARATOR . $this->file_name;
+        $temporaryFile = $temporaryDirectory->path('/').DIRECTORY_SEPARATOR.$this->file_name;
 
         /** @var Filesystem $filesystem */
         $filesystem = app(Filesystem::class);

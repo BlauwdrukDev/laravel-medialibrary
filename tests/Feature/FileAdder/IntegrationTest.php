@@ -318,16 +318,6 @@ it('can add a remote file with a space in the name to the media library', functi
     expect($this->getMediaDirectory("{$media->id}/test-with-space.jpg"))->toBeFile();
 });
 
-it('can add a remote file with an accent in the name to the media library', function () {
-    $url = 'https://orbit.brightbox.com/v1/acc-jqzwj/Marquis-Leisure/reviews/images/000/000/898/original/Antar%C3%A8sThumb.jpg';
-
-    $media = $this->testModel
-        ->addMediaFromUrl($url)
-        ->toMediaCollection();
-
-    expect($this->getMediaDirectory("{$media->id}/AntarèsThumb.jpg"))->toBeFile();
-});
-
 it('will thrown an exception when a remote file could not be added', function () {
     $url = 'https://docs.spatie.be/images/medialibrary/thisonedoesnotexist.jpg';
 
@@ -455,10 +445,10 @@ it('can add manipulations to the saved media', function () {
     $media = $this->testModelWithConversion
         ->addMedia($this->getTestJpg())
         ->preservingOriginal()
-        ->withManipulations(['thumb' => ['width' => '10']])
+        ->withManipulations(['thumb' => ['width' => ['10']]])
         ->toMediaCollection();
 
-    expect($media->manipulations['thumb']['width'])->toEqual('10');
+    expect($media->manipulations['thumb']['width'])->toEqual(['10']);
 });
 
 it('can add file to model with morph map', function () {
@@ -602,8 +592,8 @@ it('can add an upload to the media library using dot notation', function () {
 
 it('will throw an exception and revert database when file cannot be added', function () {
     $this->testModel
-            ->addMedia($this->getTestPng())
-            ->toMediaCollection();
+        ->addMedia($this->getTestPng())
+        ->toMediaCollection();
 
     expect(Media::count())->toBe(1);
 
@@ -625,7 +615,8 @@ it('will throw an exception and revert database when file cannot be added', func
 });
 
 it('will throw an exception and revert database when file cannot be added and model uses softdeletes', function () {
-    $testModelClass = new class () extends TestModel {
+    $testModelClass = new class() extends TestModel
+    {
         use SoftDeletes;
     };
 
@@ -633,8 +624,8 @@ it('will throw an exception and revert database when file cannot be added and mo
     $testModel = $testModelClass::find($this->testModel->id);
 
     $testModel
-            ->addMedia($this->getTestPng())
-            ->toMediaCollection();
+        ->addMedia($this->getTestPng())
+        ->toMediaCollection();
 
     expect(Media::count())->toBe(1);
 

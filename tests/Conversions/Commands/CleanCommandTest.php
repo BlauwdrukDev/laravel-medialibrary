@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\DiskDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
@@ -183,9 +184,9 @@ it('can clean responsive images for deprecated conversions', function () {
 
 it('can clean responsive images for active conversions without responsive images', function () {
     $media = $this->testModelWithConversion
-            ->addMedia($this->getTestJpg())
-            ->preservingOriginal()
-            ->toMediaCollection();
+        ->addMedia($this->getTestJpg())
+        ->preservingOriginal()
+        ->toMediaCollection();
 
     $thumbResponsiveImageFileName = "{$media->file_name}___thumb_340_280.jpg";
     $thumbReponsiveImagesPath = $this->getMediaDirectory("{$media->id}/responsive-images/{$thumbResponsiveImageFileName}");
@@ -194,7 +195,7 @@ it('can clean responsive images for active conversions without responsive images
 
     $originalResponsiveImagesContent = $media->responsive_images;
     $newResponsiveImages = $originalResponsiveImagesContent;
-    $newResponsiveImages['thumb']['base64svg'] = "data:image/svg+xml;base64,PCPg==";
+    $newResponsiveImages['thumb']['base64svg'] = 'data:image/svg+xml;base64,PCPg==';
     $newResponsiveImages['thumb']['urls'][0] = $thumbResponsiveImageFileName;
     $media->responsive_images = $newResponsiveImages;
     $media->save();
@@ -234,7 +235,7 @@ it('can clean deprecated conversion files in custom path', function () {
         ->preservingOriginal()
         ->toMediaCollection();
 
-    $deprecatedImage = $this->getMediaDirectory(md5($media->id) . "/c/test-deprecated.jpg");
+    $deprecatedImage = $this->getMediaDirectory(md5($media->id).'/c/test-deprecated.jpg');
 
     touch($deprecatedImage);
     expect($deprecatedImage)->toBeFile();
@@ -242,7 +243,7 @@ it('can clean deprecated conversion files in custom path', function () {
     $this->artisan('media-library:clean');
 
     $this->assertFileDoesNotExist($deprecatedImage);
-    expect($this->getMediaDirectory(md5($media->id) . "/c/test-thumb.jpg"))->toBeFile();
+    expect($this->getMediaDirectory(md5($media->id).'/c/test-thumb.jpg'))->toBeFile();
 });
 
 it('can clean deprecated conversion files in same path as original image', function () {
@@ -273,4 +274,105 @@ it('can clean deprecated conversion files in same path as original image', funct
     $this->assertFileDoesNotExist($deprecatedImage);
     expect($this->getMediaDirectory("{$media->id}/test-thumb.jpg"))->toBeFile();
     expect($this->getMediaDirectory("{$media->id}/test.jpg"))->toBeFile();
+});
+
+it('can clean orphaned media items when enabled', function () {
+    $mediaToDelete = TestModel::create(['name' => 'test.jpg'])
+        ->addMedia($this->getTestJpg())
+        ->preservingOriginal()
+        ->toMediaCollection('collection1');
+
+    $mediaToKeep = TestModel::create(['name' => 'test.jpg'])
+        ->addMedia($this->getTestJpg())
+        ->preservingOriginal()
+        ->toMediaCollection('collection1');
+
+    // Delete quietly to avoid deleting the related media file.
+    $mediaToDelete->model->deletePreservingMedia();
+
+    $this->artisan('media-library:clean', [
+        '--delete-orphaned' => 'true',
+    ]);
+
+    // Media should be deleted from the database.
+    $this->assertDatabaseMissing('media', [
+        'id' => $mediaToDelete->id,
+    ]);
+
+    // This media should still exist.
+    $this->assertDatabaseHas('media', [
+        'id' => $mediaToKeep->id,
+    ]);
+});
+
+it('can clean orphaned media items when enabled for specific collections', function () {
+    $mediaToClean = TestModel::create(['name' => 'test.jpg'])
+        ->addMedia($this->getTestJpg())
+        ->preservingOriginal()
+        ->toMediaCollection('collection-to-clean');
+
+    $mediaToKeep = TestModel::create(['name' => 'test.jpg'])
+        ->addMedia($this->getTestJpg())
+        ->preservingOriginal()
+        ->toMediaCollection('collection-to-keep');
+
+    // Delete quietly to avoid deleting the related media file.
+    $mediaToClean->model->deletePreservingMedia();
+    $mediaToKeep->model->deletePreservingMedia();
+
+    $this->artisan('media-library:clean', [
+        '--delete-orphaned' => 'true',
+        'collectionName' => 'collection-to-clean',
+    ]);
+
+    // Media should be deleted from the database.
+    $this->assertDatabaseMissing('media', [
+        'id' => $mediaToClean->id,
+    ]);
+
+    // This media should still exist.
+    $this->assertDatabaseHas('media', [
+        'id' => $mediaToKeep->id,
+    ]);
+});
+
+it('will not clean orphaned media items when disabled', function () {
+    $media = TestModel::create(['name' => 'test.jpg'])
+        ->addMedia($this->getTestJpg())
+        ->preservingOriginal()
+        ->toMediaCollection('collection1');
+
+    // Delete quietly to avoid deleting the related media file.
+    $media->model->deletePreservingMedia();
+
+    // Without the `--delete-orphaned` flag, the orphaned media should remain.
+    $this->artisan('media-library:clean');
+
+    // This media should still exist.
+    $this->assertDatabaseHas('media', [
+        'id' => $media->id,
+    ]);
+});
+
+it('will not clean media items on soft deleted models', function () {
+    $testModelClass = new class() extends TestModel
+    {
+        use SoftDeletes;
+    };
+
+    /** @var TestModel $testModel */
+    $testModel = $testModelClass::find($this->testModel->id);
+
+    $media = $testModel->addMedia($this->getTestJpg())->toMediaCollection('images');
+
+    $testModel->deletePreservingMedia();
+
+    $this->artisan('media-library:clean', [
+        '--delete-orphaned' => 'true',
+    ]);
+
+    // This media should still exist.
+    $this->assertDatabaseHas('media', [
+        'id' => $media->id,
+    ]);
 });

@@ -2,6 +2,117 @@
 
 All notable changes to `laravel-medialibrary` will be documented in this file
 
+## 11.0.3 - 2023-12-24
+
+### What's Changed
+
+* [11.x] Add test to check that pdf conversions are correct by @kduma in https://github.com/spatie/laravel-medialibrary/pull/3477
+* update dependencies
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.0.2...11.0.3
+
+## 11.0.2 - 2023-12-21
+
+### What's Changed
+
+* Bump aglipanci/laravel-pint-action from 0.1.0 to 2.3.0 by @dependabot in https://github.com/spatie/laravel-medialibrary/pull/3461
+* [v11] Remove ZipStream V2 support by @erikn69 in https://github.com/spatie/laravel-medialibrary/pull/3473
+* [v11] Fix phpstan errors by @erikn69 in https://github.com/spatie/laravel-medialibrary/pull/3472
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.0.1...11.0.2
+
+## 11.0.1 - 2023-12-21
+
+### What's Changed
+
+- do not throw exceptions when trying to convert PDFs and SVGs using GD
+
+### New Contributors
+
+* @dardanmulaj made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3460
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.0.0...11.0.1
+
+## 11.0.0 - 2023-12-14
+
+### What's Changed
+
+* Suggest the installation of svgo through snap on Ubuntu by @3ub41r in https://github.com/spatie/laravel-medialibrary/pull/3434
+* Update handling-uploads-with-vue.md by @AzadGh95 in https://github.com/spatie/laravel-medialibrary/pull/3449
+* Use image v3 by @freekmurze in https://github.com/spatie/laravel-medialibrary/pull/3451
+
+### New Contributors
+
+* @AzadGh95 made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3449
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/10.15.0...11.0.0
+
+## 10.15.0 - 2023-11-03
+
+### What's Changed
+
+- Don't include soft deleted models as orphaned media by @patrickomeara in https://github.com/spatie/laravel-medialibrary/pull/3428
+
+### New Contributors
+
+- @patrickomeara made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3428
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/10.14.0...10.15.0
+
+## 10.14.0 - 2023-10-25
+
+### What's Changed
+
+- Remove unnecessary directory creation by @grEvenX in https://github.com/spatie/laravel-medialibrary/pull/3397
+- Feature/new custom delete fix #3190  by @benjam-es in https://github.com/spatie/laravel-medialibrary/pull/3252
+- Delete orphaned media in clean command by @mbardelmeijer in https://github.com/spatie/laravel-medialibrary/pull/3419
+
+### New Contributors
+
+- @grEvenX made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3397
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/10.13.2...10.14.0
+
+## 10.13.2 - 2023-10-09
+
+### What's Changed
+
+- Test against php 8.3 by @sergiy-petrov in https://github.com/spatie/laravel-medialibrary/pull/3402
+- Bump stefanzweifel/git-auto-commit-action from 4 to 5 by @dependabot in https://github.com/spatie/laravel-medialibrary/pull/3405
+
+### New Contributors
+
+- @sergiy-petrov made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3402
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/10.13.1...10.13.2
+
+## 10.13.1 - 2023-10-09
+
+### What's Changed
+
+- Adding example to docs to pass translation keys from Vue I18n in (pro) components by @jeffreyvanhees in https://github.com/spatie/laravel-medialibrary/pull/3395
+- added HEIC support by @boryn in https://github.com/spatie/laravel-medialibrary/pull/3399
+
+### New Contributors
+
+- @boryn made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3399
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/10.13.0...10.13.1
+
+## 10.13.0 - 2023-09-26
+
+### What's Changed
+
+- V3 docs by @freekmurze in https://github.com/spatie/laravel-medialibrary/pull/3382
+- Bump actions/checkout from 3 to 4 by @dependabot in https://github.com/spatie/laravel-medialibrary/pull/3374
+- Support drivers containing gcs or s3 in driver name by @LukeAbell in https://github.com/spatie/laravel-medialibrary/pull/3389
+
+### New Contributors
+
+- @LukeAbell made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3389
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/10.12.2...10.13.0
+
 ## 10.12.2 - 2023-09-05
 
 ### What's Changed
