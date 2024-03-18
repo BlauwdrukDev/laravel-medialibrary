@@ -206,6 +206,13 @@ class Filesystem
         return $this->filesystem->disk($media->disk)->readStream($sourceFile);
     }
 
+    public function getConversionStream(Media $media, string $conversion)
+    {
+        $sourceFile = $media->getPathRelativeToRoot($conversion);
+
+        return $this->filesystem->disk($media->conversions_disk)->readStream($sourceFile);
+    }
+
     public function copyFromMediaLibrary(Media $media, string $targetFile): string
     {
         file_put_contents($targetFile, $this->getStream($media));
@@ -235,7 +242,7 @@ class Filesystem
 
         $responsiveImagePaths = array_filter(
             $allFilePaths,
-            fn (string $path) => Str::contains($path, $conversionName)
+            fn (string $path) => Str::contains($path, $media->name) && Str::contains($path, $conversionName)
         );
 
         $this->filesystem->disk($media->disk)->delete($responsiveImagePaths);

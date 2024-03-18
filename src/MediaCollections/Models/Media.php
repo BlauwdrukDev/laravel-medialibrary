@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Mail\Attachment;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use MongoDB\Laravel\Eloquent\Model;
 use Spatie\MediaLibrary\Conversions\Conversion;
 use Spatie\MediaLibrary\Conversions\ConversionCollection;
@@ -78,6 +79,8 @@ class Media extends Model implements Attachable, Htmlable, Responsable
         'responsive_images' => 'array',
     ];
 
+    protected int $streamChunkSize = (1024 * 1024); // default to 1MB chunks.
+
     public function newCollection(array $models = [])
     {
         return new MediaCollection($models);
@@ -135,6 +138,11 @@ class Media extends Model implements Attachable, Htmlable, Responsable
         }
 
         return $this->getUrl();
+    }
+
+    public function getDownloadFilename(): string
+    {
+        return $this->file_name;
     }
 
     public function getAvailableFullUrl(array $conversionNames): string
@@ -299,9 +307,16 @@ class Media extends Model implements Attachable, Htmlable, Responsable
 
     public function hasGeneratedConversion(string $conversionName): bool
     {
-        $generatedConversions = $this->getGeneratedConversions();
+        $generatedConversions = $this->generated_conversions;
 
-        return $generatedConversions[$conversionName] ?? false;
+        return Arr::get($generatedConversions, $conversionName, false);
+    }
+
+    public function setStreamChunkSize(int $chunkSize)
+    {
+        $this->streamChunkSize = $chunkSize;
+
+        return $this;
     }
 
     public function toResponse($request)
@@ -316,18 +331,23 @@ class Media extends Model implements Attachable, Htmlable, Responsable
 
     private function buildResponse($request, string $contentDispositionType)
     {
+        $filename = str_replace('"', '\'', Str::ascii($this->getDownloadFilename()));
+
         $downloadHeaders = [
             'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
             'Content-Type' => $this->mime_type,
             'Content-Length' => $this->size,
-            'Content-Disposition' => $contentDispositionType.'; filename="'.$this->file_name.'"',
+            'Content-Disposition' => $contentDispositionType.'; filename="'.$filename.'"',
             'Pragma' => 'public',
         ];
 
         return response()->stream(function () {
             $stream = $this->stream();
 
-            fpassthru($stream);
+            while (! feof($stream)) {
+                echo fread($stream, $this->streamChunkSize);
+                flush();
+            }
 
             if (is_resource($stream)) {
                 fclose($stream);
