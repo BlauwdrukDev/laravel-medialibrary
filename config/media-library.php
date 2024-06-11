@@ -24,7 +24,7 @@ return [
      * This queue will be used to generate derived and responsive images.
      * Leave empty to use the default queue.
      */
-    'queue_name' => '',
+    'queue_name' => env('MEDIA_QUEUE', ''),
 
     /*
      * By default all conversions will be performed on a queue.
@@ -197,6 +197,13 @@ return [
      * need to add additional flags, possibly using curl.
      */
     'media_downloader' => Spatie\MediaLibrary\Downloaders\DefaultDownloader::class,
+
+    /*
+     * When using the addMediaFromUrl method the SSL is verified by default.
+     * This is option disables SSL verification when downloading remote media.
+     * Please note that this is a security risk and should only be false in a local environment.
+     */
+    'media_downloader_ssl' => env('MEDIA_DOWNLOADER_SSL', true),
 
     'remote' => [
         /*

@@ -99,6 +99,16 @@ php artisan migrate
 
 If you are using Media Library Pro, you must schedule this artisan command in `app/Console/Kernel` to automatically delete temporary uploads
 
+### Laravel >= 11
+```php
+// in bootstrap/app.php
+
+->withSchedule(function (Schedule $schedule) {
+    $schedule->command('media-library:delete-old-temporary-uploads')->daily();
+})
+```
+
+### Laravel < 11
 ```php
 // in app/Console/Kernel.php
 
@@ -124,6 +134,25 @@ This macro will add the routes to controllers that accept file uploads for all c
 ## Front-end setup
 
 You have a couple of options for how you can use the UI components' CSS, depending on your and your project's needs:
+
+### Using Vite
+In your vite.config.js file you can add an alias to the Medialibrary Pro css file:
+
+```javascript
+export default defineConfig({
+    resolve: {
+        alias: {
+            'media-library-pro-styles': __dirname + '/vendor/spatie/laravel-medialibrary-pro/resources/js/media-library-pro-styles/src/styles.css',
+        }
+    }
+});
+```
+
+This will allow you to import the file in your own css file like this:
+```css
+@import "media-library-pro-styles";
+```
+
 
 ### Directly in Blade/HTML
 
