@@ -2,6 +2,175 @@
 
 All notable changes to `laravel-medialibrary` will be documented in this file
 
+## 11.9.1 - 2024-09-02
+
+### What's Changed
+
+* fix: make media-library:clean use of media prefix by @ImJustToNy in https://github.com/spatie/laravel-medialibrary/pull/3704
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.9.0...11.9.1
+
+## 11.9.0 - 2024-08-22
+
+### What's Changed
+
+* Added config variable to disable dispatching jobs after commit by @chrispage1 in https://github.com/spatie/laravel-medialibrary/pull/3698
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.8.3...11.9.0
+
+## 11.8.3 - 2024-08-20
+
+### What's Changed
+
+* Dispatch conversion jobs after database transactions have been committed by @chrispage1 in https://github.com/spatie/laravel-medialibrary/pull/3687
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.8.2...11.8.3
+
+## 11.8.2 - 2024-08-09
+
+### What's Changed
+
+* Correctly remove media folders after removing all media files by @StyxUA in https://github.com/spatie/laravel-medialibrary/pull/3688
+
+### New Contributors
+
+* @StyxUA made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3688
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.8.1...11.8.2
+
+## 11.8.1 - 2024-07-26
+
+### What's Changed
+
+* Adjust sanitization of PHP file extensions in `FileAdder.php` by @rmdavi in https://github.com/spatie/laravel-medialibrary/pull/3681
+
+### New Contributors
+
+* @rmdavi made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3681
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.8.0...11.8.1
+
+## 11.8.0 - 2024-07-24
+
+### What's Changed
+
+* Added ability to programatically specify custom queue on FileAdder by @chrispage1 in https://github.com/spatie/laravel-medialibrary/pull/3676
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.7.6...11.8.0
+
+## 11.7.6 - 2024-07-18
+
+### What's Changed
+
+* Use Lazy Collection for artisan commands by @patrickomeara in https://github.com/spatie/laravel-medialibrary/pull/3670
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.7.5...11.7.6
+
+## 11.7.5 - 2024-07-15
+
+### What's Changed
+
+* Leverage configured TemporaryUpload model class by @tominon in https://github.com/spatie/laravel-medialibrary/pull/3663
+* Don't pull all media models from DB when performing cleanup by @ImJustToNy in https://github.com/spatie/laravel-medialibrary/pull/3657
+* Check for enum instances when applying manipulations by @dennisvandalen in https://github.com/spatie/laravel-medialibrary/pull/3661
+* add null check in setNewOrder by @DirtyRacer1337 in https://github.com/spatie/laravel-medialibrary/pull/3649
+* Fix deletion of files without extension by @cbaconnier in https://github.com/spatie/laravel-medialibrary/pull/3664
+
+### New Contributors
+
+* @tominon made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3663
+* @ImJustToNy made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3657
+* @dennisvandalen made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3661
+* @cbaconnier made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3664
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.7.4...11.7.5
+
+## 11.7.4 - 2024-07-15
+
+### What's Changed
+
+* Bump dependabot/fetch-metadata from 2.1.0 to 2.2.0 by @dependabot in https://github.com/spatie/laravel-medialibrary/pull/3662
+* Do not allow php files
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.7.3...11.7.4
+
+## 11.7.3 - 2024-07-02
+
+### What's Changed
+
+* Added callback to manipulate FileAdder when performing a copy by @chrispage1 in https://github.com/spatie/laravel-medialibrary/pull/3658
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.7.2...11.7.3
+
+## 11.7.2 - 2024-06-21
+
+### What's Changed
+
+* add nullcheck for conversions_disk by @DirtyRacer1337 in https://github.com/spatie/laravel-medialibrary/pull/3648
+
+### New Contributors
+
+* @DirtyRacer1337 made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3648
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.7.1...11.7.2
+
+## 11.7.1 - 2024-06-20
+
+### What's Changed
+
+* Update preparing-your-model.md by @KaanTanis in https://github.com/spatie/laravel-medialibrary/pull/3645
+* Fixed `moves_media_on_update` doesn't work on S3 by @cameronbatty in https://github.com/spatie/laravel-medialibrary/pull/3647
+
+### New Contributors
+
+* @KaanTanis made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3645
+* @cameronbatty made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3647
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.7.0...11.7.1
+
+## 11.7.0 - 2024-06-17
+
+### What's Changed
+
+* Fix wrong deletions by @inalto in https://github.com/spatie/laravel-medialibrary/pull/3630
+* Update DefaultDownloader.php by @omarherri in https://github.com/spatie/laravel-medialibrary/pull/3634
+* Make media lazy loading configurable by @alidevweb in https://github.com/spatie/laravel-medialibrary/pull/3627
+
+### New Contributors
+
+* @omarherri made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3634
+* @alidevweb made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3627
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.6.1...11.7.0
+
+## 11.6.1 - 2024-06-17
+
+### What's Changed
+
+* Add composer/semver dependency by @flightsupport in https://github.com/spatie/laravel-medialibrary/pull/3638
+
+### New Contributors
+
+* @flightsupport made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3638
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.6.0...11.6.1
+
+## 11.6.0 - 2024-06-12
+
+### What's Changed
+
+* [11.x] Support spatie/pdf-to-image v3 by @Jubeki in https://github.com/spatie/laravel-medialibrary/pull/3633
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.5.4...11.6.0
+
+## 11.5.4 - 2024-06-04
+
+### What's Changed
+
+* Add missing return types by @stevebauman in https://github.com/spatie/laravel-medialibrary/pull/3622
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.5.3...11.5.4
+
 ## 11.5.3 - 2024-06-04
 
 ### What's Changed
