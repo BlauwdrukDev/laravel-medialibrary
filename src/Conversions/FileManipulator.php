@@ -18,7 +18,8 @@ class FileManipulator
         Media $media,
         array $onlyConversionNames = [],
         bool $onlyMissing = false,
-        bool $withResponsiveImages = false
+        bool $withResponsiveImages = false,
+        bool $queueAll = false,
     ): void {
         if (! $this->canConvertMedia($media)) {
             return;
@@ -33,7 +34,7 @@ class FileManipulator
                 return in_array($conversion->getName(), $onlyConversionNames);
             })
             ->filter(fn (Conversion $conversion) => $conversion->shouldBePerformedOn($media->collection_name))
-            ->partition(fn (Conversion $conversion) => $conversion->shouldBeQueued());
+            ->partition(fn (Conversion $conversion) => $queueAll || $conversion->shouldBeQueued());
 
         $this
             ->performConversions($conversions, $media, $onlyMissing)
@@ -46,6 +47,20 @@ class FileManipulator
         Media $media,
         bool $onlyMissing = false
     ): self {
+        $conversions = $conversions
+            ->when(
+                $onlyMissing,
+                fn (ConversionCollection $conversions) => $conversions->reject(function (Conversion $conversion) use ($media) {
+                    $relativePath = $media->getPath($conversion->getName());
+
+                    if ($rootPath = config("filesystems.disks.{$media->disk}.root")) {
+                        $relativePath = str_replace($rootPath, '', $relativePath);
+                    }
+
+                    return Storage::disk($media->disk)->exists($relativePath);
+                })
+            );
+
         if ($conversions->isEmpty()) {
             return $this;
         }
@@ -57,25 +72,16 @@ class FileManipulator
             $temporaryDirectory->path(Str::random(32).'.'.$media->extension)
         );
 
-        $conversions
-            ->reject(function (Conversion $conversion) use ($onlyMissing, $media) {
-                $relativePath = $media->getPath($conversion->getName());
-
-                if ($rootPath = config("filesystems.disks.{$media->disk}.root")) {
-                    $relativePath = str_replace($rootPath, '', $relativePath);
-                }
-
-                return $onlyMissing && Storage::disk($media->disk)->exists($relativePath);
-            })
-            ->each(function (Conversion $conversion) use ($media, $copiedOriginalFile) {
-                (new PerformConversionAction)->execute($conversion, $media, $copiedOriginalFile);
-            });
+        $conversions->each(fn (Conversion $conversion) => (new PerformConversionAction)->execute($conversion, $media, $copiedOriginalFile));
 
         $temporaryDirectory->delete();
 
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function dispatchQueuedConversions(
         Media $media,
         ConversionCollection $conversions,
@@ -102,6 +108,9 @@ class FileManipulator
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     protected function generateResponsiveImages(Media $media, bool $withResponsiveImages): self
     {
         if (! $withResponsiveImages) {

@@ -9,6 +9,7 @@ use Spatie\Image\Enums\Constraint;
 use Spatie\Image\Enums\CropPosition;
 use Spatie\Image\Enums\Fit;
 use Spatie\Image\Enums\FlipDirection;
+use Spatie\Image\Enums\Orientation;
 
 /** @mixin \Spatie\Image\Drivers\ImageDriver */
 class Manipulations
@@ -27,6 +28,9 @@ class Manipulations
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function addManipulation(string $name, array $parameters = []): self
     {
         $this->manipulations[$name] = $parameters;
@@ -63,6 +67,9 @@ class Manipulations
         }
     }
 
+    /**
+     * @return $this
+     */
     public function mergeManipulations(self $manipulations): self
     {
         foreach ($manipulations->toArray() as $name => $parameters) {
@@ -72,6 +79,9 @@ class Manipulations
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function removeManipulation(string $name): self
     {
         unset($this->manipulations[$name]);
@@ -127,6 +137,11 @@ class Manipulations
             case 'flip':
                 if (isset($parameters['flip']) && ! $parameters['flip'] instanceof FlipDirection) {
                     $parameters['flip'] = FlipDirection::from($parameters['flip']);
+                }
+                break;
+            case 'orientation':
+                if (isset($parameters['orientation']) && ! $parameters['orientation'] instanceof Orientation) {
+                    $parameters['orientation'] = Orientation::from($parameters['orientation']);
                 }
                 break;
             default:

@@ -137,7 +137,7 @@ class Conversion
 
         $currentManipulations = $this->manipulations->toArray();
 
-        $allManipulations = array_merge($currentManipulations, $newManipulations);
+        $allManipulations = array_merge($newManipulations, Arr::except($currentManipulations, array_keys($newManipulations)));
 
         $this->manipulations = new Manipulations($allManipulations);
 
@@ -153,7 +153,7 @@ class Conversion
 
     public function shouldBePerformedOn(string $collectionName): bool
     {
-        //if no collections were specified, perform conversion on all collections
+        // if no collections were specified, perform conversion on all collections
         if (! count($this->performOnCollections)) {
             return true;
         }
@@ -186,9 +186,9 @@ class Conversion
         return $this;
     }
 
-    public function withResponsiveImages(): self
+    public function withResponsiveImages(bool $withResponsiveImages = true): self
     {
-        $this->generateResponsiveImages = true;
+        $this->generateResponsiveImages = $withResponsiveImages;
 
         return $this;
     }

@@ -27,6 +27,9 @@ use Spatie\MediaLibrary\Support\MediaLibraryPro;
 use Spatie\MediaLibraryPro\PendingMediaLibraryRequestHandler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+/**
+ * @template TMedia of \Spatie\MediaLibrary\MediaCollections\Models\Media = \Spatie\MediaLibrary\MediaCollections\Models\Media
+ */
 trait InteractsWithMedia
 {
     /** @var Conversion[] */
@@ -56,6 +59,9 @@ trait InteractsWithMedia
         });
     }
 
+    /**
+     * @return MorphMany<TMedia, $this>
+     */
     public function media(): MorphMany
     {
         return $this->morphMany($this->getMediaModel(), 'model');
@@ -63,12 +69,17 @@ trait InteractsWithMedia
 
     /**
      * Add a file to the media library.
+     *
+     * @return FileAdder<TMedia>
      */
     public function addMedia(string|UploadedFile $file): FileAdder
     {
         return app(FileAdderFactory::class)->create($this, $file);
     }
 
+    /**
+     * @return FileAdder<TMedia>
+     */
     public function addMediaFromRequest(string $key): FileAdder
     {
         return app(FileAdderFactory::class)->createFromRequest($this, $key);
@@ -76,6 +87,8 @@ trait InteractsWithMedia
 
     /**
      * Add a file from the given disk.
+     *
+     * @return FileAdder<TMedia>
      */
     public function addMediaFromDisk(string $key, ?string $disk = null): FileAdder
     {
@@ -108,7 +121,7 @@ trait InteractsWithMedia
      * Add multiple files from a request by keys.
      *
      * @param  string[]  $keys
-     * @return \Spatie\MediaLibrary\MediaCollections\FileAdder[]
+     * @return Collection<int, FileAdder<TMedia>>
      */
     public function addMultipleMediaFromRequest(array $keys): Collection
     {
@@ -118,7 +131,7 @@ trait InteractsWithMedia
     /**
      * Add all files from a request.
      *
-     * @return \Spatie\MediaLibrary\MediaCollections\FileAdder[]
+     * @return Collection<int, FileAdder<TMedia>>
      */
     public function addAllMediaFromRequest(): Collection
     {
@@ -128,7 +141,7 @@ trait InteractsWithMedia
     /**
      * Add a remote file to the media library.
      *
-     *
+     * @return FileAdder<TMedia>
      *
      * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded
      */
@@ -164,6 +177,7 @@ trait InteractsWithMedia
      * Add a file to the media library that contains the given string.
      *
      * @param string string
+     * @return FileAdder<TMedia>
      */
     public function addMediaFromString(string $text): FileAdder
     {
@@ -180,6 +194,8 @@ trait InteractsWithMedia
 
     /**
      * Add a base64 encoded file to the media library.
+     *
+     * @return FileAdder<TMedia>
      *
      * @throws \Spatie\MediaLibrary\MediaCollections\Exceptions\FileCannotBeAdded
      * @throws InvalidBase64Data
@@ -217,6 +233,8 @@ trait InteractsWithMedia
 
     /**
      * Add a file to the media library from a stream.
+     *
+     * @return FileAdder<TMedia>
      */
     public function addMediaFromStream($stream): FileAdder
     {
@@ -233,6 +251,8 @@ trait InteractsWithMedia
 
     /**
      * Copy a file to the media library.
+     *
+     * @return FileAdder<TMedia>
      */
     public function copyMedia(string|UploadedFile $file): FileAdder
     {
@@ -242,13 +262,15 @@ trait InteractsWithMedia
     /*
      * Determine if there is media in the given collection.
      */
-    public function hasMedia(string $collectionName = 'default', array $filters = []): bool
+    public function hasMedia(string $collectionName = 'default', array|callable $filters = []): bool
     {
         return count($this->getMedia($collectionName, $filters)) ? true : false;
     }
 
     /**
      * Get media collection by its collectionName.
+     *
+     * @return MediaCollections\Models\Collections\MediaCollection<int, TMedia>
      */
     public function getMedia(string $collectionName = 'default', array|callable $filters = []): MediaCollections\Models\Collections\MediaCollection
     {
@@ -267,6 +289,9 @@ trait InteractsWithMedia
         return config('media-library.media_model');
     }
 
+    /**
+     * @return TMedia|null
+     */
     public function getFirstMedia(string $collectionName = 'default', $filters = []): ?Media
     {
         $media = $this->getMedia($collectionName, $filters);
@@ -427,6 +452,9 @@ trait InteractsWithMedia
         }
     }
 
+    /**
+     * @return $this
+     */
     public function clearMediaCollection(string $collectionName = 'default'): HasMedia
     {
         $this
@@ -442,6 +470,9 @@ trait InteractsWithMedia
         return $this;
     }
 
+    /**
+     * @return $this
+     */
     public function clearMediaCollectionExcept(
         string $collectionName = 'default',
         array|Collection|Media $excludedMedia = []
