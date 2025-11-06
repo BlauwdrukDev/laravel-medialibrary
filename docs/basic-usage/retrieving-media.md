@@ -23,7 +23,7 @@ You can retrieve the URL and path to the file associated with the `Media`-object
 $publicUrl = $mediaItems[0]->getUrl();
 $publicFullUrl = $mediaItems[0]->getFullUrl(); // URL including domain
 $fullPathOnDisk = $mediaItems[0]->getPath();
-$temporaryS3Url = $mediaItems[0]->getTemporaryUrl(Carbon::now()->addMinutes(5));
+$temporaryS3Url = $mediaItems[0]->getTemporaryUrl(Carbon::now()->addMinutes(5)); // Temporary S3 url (Keep first parameter null to use default expiration time)
 ```
 
 If you want to retrieve versioned media URLs, for example when needing cache busting, you can enable versioning by setting the `version_urls` config value to `true` in your `media-library.php` config file. The `getUrl()` and `getFullUrl()` functions will return the URL with a version string based on the `updated_at` column of the media model.
@@ -33,6 +33,13 @@ Since retrieving the first media and the URL for the first media for an object i
 ```php
 $media = $yourModel->getFirstMedia();
 $url = $yourModel->getFirstMediaUrl();
+```
+
+You can also retrieve the last media by using similar convenience-methods:
+
+```php
+$media = $yourModel->getLastMedia();
+$url = $yourModel->getLastMediaUrl();
 ```
 
 An instance of `Media` also has a name, by default its filename:

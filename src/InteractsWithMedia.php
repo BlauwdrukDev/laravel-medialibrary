@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Spatie\MediaLibrary\Conversions\Conversion;
 use Spatie\MediaLibrary\Downloaders\DefaultDownloader;
+use Spatie\MediaLibrary\Enums\CollectionPosition;
 use Spatie\MediaLibrary\MediaCollections\Events\CollectionHasBeenClearedEvent;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\InvalidBase64Data;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\InvalidUrl;
@@ -55,7 +56,7 @@ trait InteractsWithMedia
                 }
             }
 
-            $model->media()->cursor()->each(fn (Media $media) => $media->delete());
+            $model->deleteAllMedia();
         });
     }
 
@@ -294,19 +295,31 @@ trait InteractsWithMedia
      */
     public function getFirstMedia(string $collectionName = 'default', $filters = []): ?Media
     {
-        $media = $this->getMedia($collectionName, $filters);
-
-        return $media->first();
+        return $this->getMediaItem($collectionName, $filters, CollectionPosition::First);
     }
 
-    /*
-     * Get the url of the image for the given conversionName
-     * for first media for the given collectionName.
-     * If no profile is given, return the source's url.
+    /**
+     * @return TMedia|null
      */
-    public function getFirstMediaUrl(string $collectionName = 'default', string $conversionName = ''): string
+    public function getLastMedia(string $collectionName = 'default', $filters = []): ?Media
     {
-        $media = $this->getFirstMedia($collectionName);
+        return $this->getMediaItem($collectionName, $filters, CollectionPosition::Last);
+    }
+
+    protected function getMediaItem(string $collectionName, $filters, CollectionPosition $position)
+    {
+        $media = $this->getMedia($collectionName, $filters);
+
+        return $position === CollectionPosition::First
+            ? $media->first()
+            : $media->last();
+    }
+
+    private function getMediaItemUrl(string $collectionName, string $conversionName, CollectionPosition $position): string
+    {
+        $media = $position === CollectionPosition::First
+            ? $this->getFirstMedia($collectionName)
+            : $this->getLastMedia($collectionName);
 
         if (! $media) {
             return $this->getFallbackMediaUrl($collectionName, $conversionName) ?: '';
@@ -322,15 +335,32 @@ trait InteractsWithMedia
     /*
      * Get the url of the image for the given conversionName
      * for first media for the given collectionName.
-     *
      * If no profile is given, return the source's url.
      */
-    public function getFirstTemporaryUrl(
+    public function getFirstMediaUrl(string $collectionName = 'default', string $conversionName = ''): string
+    {
+        return $this->getMediaItemUrl($collectionName, $conversionName, CollectionPosition::First);
+    }
+
+    /*
+     * Get the url of the image for the given conversionName
+     * for last media for the given collectionName.
+     * If no profile is given, return the source's url.
+     */
+    public function getLastMediaUrl(string $collectionName = 'default', string $conversionName = ''): string
+    {
+        return $this->getMediaItemUrl($collectionName, $conversionName, CollectionPosition::Last);
+    }
+
+    private function getMediaItemTemporaryUrl(
         DateTimeInterface $expiration,
-        string $collectionName = 'default',
-        string $conversionName = ''
+        string $collectionName,
+        string $conversionName,
+        CollectionPosition $position
     ): string {
-        $media = $this->getFirstMedia($collectionName);
+        $media = $position === CollectionPosition::First
+            ? $this->getFirstMedia($collectionName)
+            : $this->getLastMedia($collectionName);
 
         if (! $media) {
             return $this->getFallbackMediaUrl($collectionName, $conversionName) ?: '';
@@ -341,6 +371,38 @@ trait InteractsWithMedia
         }
 
         return $media->getTemporaryUrl($expiration, $conversionName);
+    }
+
+    /*
+     * Get the url of the image for the given conversionName
+     * for first media for the given collectionName.
+     *
+     * If no profile is given, return the source's url.
+     */
+    public function getFirstTemporaryUrl(
+        ?DateTimeInterface $expiration = null,
+        string $collectionName = 'default',
+        string $conversionName = ''
+    ): string {
+        $expiration = $expiration ?: now()->addMinutes(config('media-library.temporary_url_default_lifetime'));
+
+        return $this->getMediaItemTemporaryUrl($expiration, $collectionName, $conversionName, CollectionPosition::First);
+    }
+
+    /*
+     * Get the url of the image for the given conversionName
+     * for last media for the given collectionName.
+     *
+     * If no profile is given, return the source's url.
+     */
+    public function getLastTemporaryUrl(
+        ?DateTimeInterface $expiration = null,
+        string $collectionName = 'default',
+        string $conversionName = ''
+    ): string {
+        $expiration = $expiration ?: now()->addMinutes(config('media-library.temporary_url_default_lifetime'));
+
+        return $this->getMediaItemTemporaryUrl($expiration, $collectionName, $conversionName, CollectionPosition::Last);
     }
 
     public function getRegisteredMediaCollections(): Collection
@@ -380,14 +442,11 @@ trait InteractsWithMedia
         return $fallbackPaths[$conversionName] ?? $fallbackPaths['default'] ?? '';
     }
 
-    /*
-     * Get the url of the image for the given conversionName
-     * for first media for the given collectionName.
-     * If no profile is given, return the source's url.
-     */
-    public function getFirstMediaPath(string $collectionName = 'default', string $conversionName = ''): string
+    private function getMediaItemPath(string $collectionName, string $conversionName, CollectionPosition $position): string
     {
-        $media = $this->getFirstMedia($collectionName);
+        $media = $position === CollectionPosition::First
+            ? $this->getFirstMedia($collectionName)
+            : $this->getLastMedia($collectionName);
 
         if (! $media) {
             return $this->getFallbackMediaPath($collectionName, $conversionName) ?: '';
@@ -398,6 +457,21 @@ trait InteractsWithMedia
         }
 
         return $media->getPath($conversionName);
+    }
+
+    /*
+     * Get the url of the image for the given conversionName
+     * for first media for the given collectionName.
+     * If no profile is given, return the source's url.
+     */
+    public function getFirstMediaPath(string $collectionName = 'default', string $conversionName = ''): string
+    {
+        return $this->getMediaItemPath($collectionName, $conversionName, CollectionPosition::First);
+    }
+
+    public function getLastMediaPath(string $collectionName = 'default', string $conversionName = ''): string
+    {
+        return $this->getMediaItemPath($collectionName, $conversionName, CollectionPosition::Last);
     }
 
     /*
@@ -607,6 +681,16 @@ trait InteractsWithMedia
         if ($validation->fails()) {
             throw MimeTypeNotAllowed::create($file, $allowedMimeTypes);
         }
+    }
+
+    public function deleteAllMedia(): self
+    {
+        $this
+            ->media()
+            ->cursor()
+            ->each(fn (Media $media) => $media->delete());
+
+        return $this;
     }
 
     public function registerMediaConversions(?Media $media = null): void {}

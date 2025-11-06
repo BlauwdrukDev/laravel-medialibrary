@@ -2,6 +2,108 @@
 
 All notable changes to `laravel-medialibrary` will be documented in this file
 
+## 11.17.3 - 2025-11-04
+
+### What's Changed
+
+* Improve media library with safeguards by @imhayatunnabi in https://github.com/spatie/laravel-medialibrary/pull/3867
+
+### New Contributors
+
+* @imhayatunnabi made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3867
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.17.2...11.17.3
+
+## 11.17.2 - 2025-11-03
+
+### What's Changed
+
+* Added Symfony 8 support to all symfony/* packages. by @thecaliskan in https://github.com/spatie/laravel-medialibrary/pull/3864
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.17.1...11.17.2
+
+## 11.17.1 - 2025-11-03
+
+### What's Changed
+
+* Add timeout and threads configuration for FFMpeg by @francoism90 in https://github.com/spatie/laravel-medialibrary/pull/3862
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.17.0...11.17.1
+
+## 11.17.0 - 2025-10-22
+
+### What's Changed
+
+* docs: add installation instructions for image optimizers on Alpine Linux by @nastoychev in https://github.com/spatie/laravel-medialibrary/pull/3845
+* Feat: allow null expiration for model get temporary url method by @chinmaypurav in https://github.com/spatie/laravel-medialibrary/pull/3851
+* Update issue template by @AlexVanderbist in https://github.com/spatie/laravel-medialibrary/pull/3850
+* Optimize filename suffix generation in MediaStream by @iizno in https://github.com/spatie/laravel-medialibrary/pull/3855
+* Test PHP 8.5 by @erikn69 in https://github.com/spatie/laravel-medialibrary/pull/3857
+* Add Support for Defining Custom Path Generators in Models or Service Providers by @alissn in https://github.com/spatie/laravel-medialibrary/pull/3828
+* Bump stefanzweifel/git-auto-commit-action from 6 to 7 by @dependabot[bot] in https://github.com/spatie/laravel-medialibrary/pull/3860
+
+### New Contributors
+
+* @iizno made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3855
+* @alissn made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3828
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.14.0...11.17.0
+
+## 11.16.0 - 2025-10-21
+
+### What's Changed
+
+* Test PHP 8.5 by @erikn69 in https://github.com/spatie/laravel-medialibrary/pull/3857
+* Add Support for Defining Custom Path Generators in Models or Service Providers by @alissn in https://github.com/spatie/laravel-medialibrary/pull/3828
+* Bump stefanzweifel/git-auto-commit-action from 6 to 7 by @dependabot[bot] in https://github.com/spatie/laravel-medialibrary/pull/3860
+
+### New Contributors
+
+* @alissn made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3828
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.15.0...11.16.0
+
+## 11.15.0 - 2025-09-19
+
+### What's Changed
+
+* docs: add installation instructions for image optimizers on Alpine Linux by @nastoychev in https://github.com/spatie/laravel-medialibrary/pull/3845
+* Feat: allow null expiration for model get temporary url method by @chinmaypurav in https://github.com/spatie/laravel-medialibrary/pull/3851
+* Update issue template by @AlexVanderbist in https://github.com/spatie/laravel-medialibrary/pull/3850
+* Optimize filename suffix generation in MediaStream by @iizno in https://github.com/spatie/laravel-medialibrary/pull/3855
+
+### New Contributors
+
+* @iizno made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3855
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.14.0...11.15.0
+
+## 11.14.0 - 2025-08-19
+
+### What's Changed
+
+* Feat: set default expiration minutes when no value passes in args for temp url by @chinmaypurav in https://github.com/spatie/laravel-medialibrary/pull/3832
+* Bump actions/checkout from 4 to 5 by @dependabot[bot] in https://github.com/spatie/laravel-medialibrary/pull/3840
+* Bump stefanzweifel/git-auto-commit-action from 5 to 6 by @dependabot[bot] in https://github.com/spatie/laravel-medialibrary/pull/3825
+
+### New Contributors
+
+* @chinmaypurav made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3832
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.13.0...11.14.0
+
+## 11.13.0 - 2025-05-22
+
+### What's Changed
+
+* Add support for LastMedia functions by @bAngerman in https://github.com/spatie/laravel-medialibrary/pull/3818
+
+### New Contributors
+
+* @bAngerman made their first contribution in https://github.com/spatie/laravel-medialibrary/pull/3818
+
+**Full Changelog**: https://github.com/spatie/laravel-medialibrary/compare/11.12.9...11.13.0
+
 ## 11.12.9 - 2025-03-31
 
 ### What's Changed
