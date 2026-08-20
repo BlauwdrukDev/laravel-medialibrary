@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Mail\Attachment;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use MongoDB\Laravel\Eloquent\Model;
@@ -59,8 +60,8 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
  * @property array $custom_properties
  * @property array $generated_conversions
  * @property array $responsive_images
- * @property-read ?\Illuminate\Support\Carbon $created_at
- * @property-read ?\Illuminate\Support\Carbon $updated_at
+ * @property-read ?Carbon $created_at
+ * @property-read ?Carbon $updated_at
  */
 class Media extends Model implements Attachable, Htmlable, Responsable
 {

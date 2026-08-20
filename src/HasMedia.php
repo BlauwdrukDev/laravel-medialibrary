@@ -2,20 +2,22 @@
 
 namespace Spatie\MediaLibrary;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Collection;
 use Spatie\MediaLibrary\Conversions\Conversion;
 use Spatie\MediaLibrary\MediaCollections\FileAdder;
+use Spatie\MediaLibrary\MediaCollections\MediaCollection;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * @mixin \Illuminate\Database\Eloquent\Model
+ * @mixin Model
  *
  * @method void prepareToAttachMedia(Media $media, FileAdder $fileAdder)
  *
  * @property bool $registerMediaConversionsUsingModelInstance
- * @property ?\Spatie\MediaLibrary\MediaCollections\MediaCollection $mediaCollections
+ * @property ?MediaCollection $mediaCollections
  */
 interface HasMedia
 {

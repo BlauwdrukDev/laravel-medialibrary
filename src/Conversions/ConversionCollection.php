@@ -5,6 +5,7 @@ namespace Spatie\MediaLibrary\Conversions;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\InvalidConversion;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
@@ -58,7 +59,7 @@ class ConversionCollection extends Collection
             return;
         }
 
-        /** @var \Spatie\MediaLibrary\HasMedia $model */
+        /** @var HasMedia $model */
         $model = new $modelName;
 
         /*
